@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging")
    }
 
 app.use(router);
+app.use("/uploads",express.static("./uploads"));
 
 app.listen(PORT,()=>{
     console.log(`server start at port no ${PORT}`)

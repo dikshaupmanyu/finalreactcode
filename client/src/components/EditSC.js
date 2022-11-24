@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const EditSubCategory = () => {
   const [category, setcategory] = useState("");
-  const [subcategory, setSubcategory] = useState("");
+  const [sname, setSubcategory] = useState("");
   const [data, setData] = useState([]);
 
   const params = useParams();
@@ -19,8 +19,9 @@ const EditSubCategory = () => {
 
   const geteditCategory = async () => {
     // console.log(params)
-    let result = await fetch(`http://localhost:8005/editSubCategory/${params.id}`);
+    let result = await fetch(`/editSubCategory/${params.id}`);
     result = await result.json();
+    console.log(result)
     setcategory(result.category);
     setSubcategory(result.sname);
   };
@@ -47,16 +48,16 @@ const getCategoryName = async () => {
   const editSubCategory = async (e) => {
     // console.warn(fname, description);
     e.preventDefault();
-    let res2 = await fetch(`http://localhost:8005/editSubCategory/${params.id}`,{
+    let res2 = await fetch(`/editSubCategory/${params.id}`,{
       method: "PATCH",
       headers:{
         "Content-Type":"Application/json",
       },
-      body: JSON.stringify({category, subcategory}),
+      body: JSON.stringify({category, sname}),
     });
 
     res2 = await res2.json();
-    // console.log(res2);
+    console.log(res2);
     if(res2.status === 422 || !res2){
     //   alert("yes")
   }else{
@@ -91,7 +92,7 @@ const getCategoryName = async () => {
 
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>SubCategory Name</Form.Label>
-          <Form.Control type="text" name='sname' value={subcategory} onChange={(e) => { setSubcategory(e.target.value); }} placeholder="" />
+          <Form.Control type="text" name='sname' value={sname} onChange={(e) => { setSubcategory(e.target.value); }} placeholder="" />
         </Form.Group>
 
 

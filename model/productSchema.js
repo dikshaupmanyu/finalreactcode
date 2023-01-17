@@ -10,10 +10,31 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    price:{
+        type:Number,
+        required:true
+    },
+    category:{
+        type:String,
+        required:true
+    },
+    subcategory:{
+        type:String,
+        required:true
+    },
     imgpath:{
         type:String,
         required:true
     },
+    quantity:{
+        type:Number,
+        default:1,
+    },
+    stock:{
+        type:Number,
+        
+    },
+    
     date:{
         type:Date
     }

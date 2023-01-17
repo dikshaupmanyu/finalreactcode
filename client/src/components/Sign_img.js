@@ -5,7 +5,7 @@ const Sign_img = () => {
     <>
       <div className="right_data mt-3" style={{ width: "100%" }}>
         <div className="sign_img mt-3">
-          <img src="./sign.svg" style={{ maxWidth: 480 }} />
+          <img src="../sign.svg" style={{ maxWidth: 480 }} />
         </div>
       </div>
     </>

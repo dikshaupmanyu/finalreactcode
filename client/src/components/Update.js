@@ -1,60 +1,71 @@
 import React, { useState, useEffect } from 'react'
 import Button from 'react-bootstrap/Button';
+import Card from "react-bootstrap/Card";
+import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import { useNavigate , useParams , useHistory} from "react-router-dom";
 
 const Update = () => {
 
   const  history = useNavigate(""); 
-    
-    const [fname , setName] = useState("");
-    const [description , setDescription] = useState("");
-    const [imgpath, setImage] = useState("");
-  
+  const [fname , setName] = useState("");
+  const [description , setDescription] = useState("");
+  const [file, setFile] = useState("");
+  console.log(file)
 
-    const params = useParams();
 
-    useEffect(() => {
-        getProductDetails()
-    },[]);
+  const params = useParams();
 
-    const getProductDetails = async () => { 
-        // console.log(params)
-        let result = await fetch(`/product/${params.id}`);
-        result = await result.json();
-        console.log(result);
-        setName(result.fname)
-        setDescription(result.description)
-        setImage(result.imgpath)
-     }
+  useEffect(() => {
+      getProductDetails()
+  },[]);
 
-   const updateProduct = async (e) => {
+  const setimgfile = (e) => {
+    setFile(e.target.files[0])
+  }
 
+  const getProductDetails = async () => { 
+      // console.log(params)
+      let result = await fetch(`/product/${params.id}`);
+      result = await result.json();
+      // console.log(result);
+      setName(result.fname)
+      setDescription(result.description)
+      setFile(result.imgpath)
+   }
+
+ const updateProduct = async (e) => {
+   e.preventDefault();
     var formData = new FormData();
-    formData.append("photo", imgpath);
+    formData.append("imgpath", file);
     formData.append("fname", fname);
     formData.append("description", description);
 
-      // console.warn(fname, description);
-      e.preventDefault();
-      let res2 = await fetch(`/product/${params.id}`,{
-        method: "PATCH",
-        headers:{
-          "Content-Type":"multipart/form-data",
-        },
-        // body: JSON.stringify({fname, description}),
-        body:formData
-      });
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
 
-      res2 = await res2.json();
-      console.log(res2);
-      if(res2.status === 422 || !res2){
-      //   alert("yes")
-    }else{
+    const res2 = await axios.put(`/product/${params.id}`, formData, config);
+    // let res2 = await fetch(`/product/${params.id}`,{
+    //   method: "PUT",
+    //   headers:{
+    //     "Content-Type":"multipart/form-data",
+    //   },
+    //   body: JSON.stringify({fname, description,file}),
+    // });
+
+    // res2 = await res2.json();
+    console.log(res2);
+    if(res2.status === 201){
       alert("data update")
       history("/home")
-      }
-   }  
+      
+    }else{
+    console.log("error")
+    }
+ }  
 
   
 
@@ -74,9 +85,24 @@ const Update = () => {
             <Form.Control type="text" name='description' value={description} onChange={(e) => {setDescription(e.target.value)}} placeholder="" />
           </Form.Group>
 
+          {/* { file((el, i) => {
+                return (
+          <Card.Img
+                        variant="top"
+                        style={{
+                          width: "25%",
+                          textAlign: "center",
+                          margin: "auto",
+                        }}
+                        src={`/uploads/${el.imgpath}`}
+                        className="mt-2"
+                      />
+                      );
+                    })
+                  } */}
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Select Your Image</Form.Label>
-            <Form.Control type="file" value=""  onChange={(e) => {setImage(e.target.files[0])}}  name='photo' placeholder="" />
+            <Form.Control type="file"  onChange={setimgfile}  name='imgpath' placeholder="" />
           </Form.Group>
           <Button variant="primary" onClick={updateProduct} type="submit">
             Submit

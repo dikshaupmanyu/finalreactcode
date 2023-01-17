@@ -81,7 +81,7 @@ const getCategoryName = async () => {
             ? data.map((el, i) => {
                 return (
                     <>
-                    <option>{el.fname}</option>
+                    <option key={el._id}>{el.fname}</option>
                   </>
                   );
               }): " "

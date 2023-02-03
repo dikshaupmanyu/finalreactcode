@@ -1,16 +1,36 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./cartDetail.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Header1 from "./Header1";
 import styled from "styled-components";
-import { FiShoppingCart , FiHeart} from "react-icons/fi";
+import { FiHeart } from "react-icons/fi";
 import { TbTruckDelivery, TbReplace } from "react-icons/tb";
 import { MdSecurity } from "react-icons/md";
 import { Button } from "../../style/Button";
 import PageNavigation from "../PageNavigation";
+// import Carousels from "./Carousel";
+import { NavLink } from "react-router-dom";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import { useFilterContext } from "../../context/filter_context";
+import axios from "axios";
 
 const CartDetail = ({ cart, bag, AddToCart, AddToBag }) => {
+  const { all_products, filter_products } = useFilterContext();
   const [inddata, setIndedata] = useState("");
+
+  const filtered = all_products.filter((cat) => {
+    return cat.category === inddata.category;
+  });
+
+  // ///////   GET RENDOM DATA 
+  var shuffled = filtered.sort(function () {
+    return 0.5 - Math.random();
+  });
+
+  var selected = shuffled.slice(0, 5);
+
+  console.log(selected);
 
   const params = useParams();
 
@@ -27,7 +47,7 @@ const CartDetail = ({ cart, bag, AddToCart, AddToBag }) => {
 
   return (
     <>
-      <Header1 cart={cart} bag={bag}/>
+      <Header1 cart={cart} bag={bag} />
       <PageNavigation title={inddata.fname} />
       <Wrapper>
         <div className="container">
@@ -86,27 +106,96 @@ const CartDetail = ({ cart, bag, AddToCart, AddToBag }) => {
                 </p>
               </div>
               <hr />
-              <div style={{display:"flex"}}>
-
-              {inddata.stock > 0 && (
-                <Button className="btn" onClick={() => AddToCart(inddata)}  style={{marginRight:"10px"}}>
-                  Add To Cart
-                </Button>
-              )}
-              {inddata.stock > 0 && (
-                <Button className="btn" onClick={() => AddToBag(inddata)}>
-                   <FiHeart className="cart-trolley" style={{marginRight:"7px"}}/>
-                  WishList
-                </Button>
-              )}
+              <div style={{ display: "flex" }}>
+                {inddata.stock > 0 && (
+                  <Button
+                    className="btn"
+                    onClick={() => AddToCart(inddata)}
+                    style={{ marginRight: "10px" }}
+                  >
+                    Add To Cart
+                  </Button>
+                )}
+                {inddata.stock > 0 && (
+                  <Button className="btn" onClick={() => AddToBag(inddata)}>
+                    <FiHeart
+                      className="cart-trolley"
+                      style={{ marginRight: "7px" }}
+                    />
+                    WishList
+                  </Button>
+                )}
               </div>
               {/* <Button className="btn" onClick={() => handleClick(inddata)}>Add To Cart</Button> */}
             </div>
           </div>
         </div>
       </Wrapper>
+      <Carousel
+        responsive={responsive}
+        autoPlay={true}
+        autoPlaySpeed={1000}
+        style={{ padding: "50px", paddingLeft: "100px" }}
+      >
+        {selected.map((product, index) => {
+          return (
+            <>
+              {/* <NavLink to={`/cartDetail/${product._id}`} key={product._id}> */}
+              <a href={`/cartDetail/${product._id}`}>
+                <div className="carousels">
+                  <div className="carousel">
+                    <img
+                      src={`/uploads/${product.imgpath}`}
+                      alt={product.fname}
+                      className="carouselIcon"
+                    />
+                    <span className="carouselTitle">{product.fname}</span>
+                    {/* <span className="featureDesc">{curElem.price}</span> */}
+                  </div>
+                </div>
+              </a>
+              {/* </NavLink> */}
+
+              {/* <a href={`/cartDetail/${product._id}`}>
+                <div
+                  className="card_corousel"
+                  style={{ width: "60%", height: "20%", marginLeft:"50px" }}
+                >
+                  <div style={{ height: "20%", textAlign: "center" }}>
+                    <img
+                      src={`/uploads/${product.imgpath}`}
+                      style={{ width: "20rem" }}
+                    />
+                  </div>
+                  <p>{product.fname}</p>
+                </div>
+              </a> */}
+            </>
+          );
+        })}
+      </Carousel>
     </>
   );
+};
+
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 4000, min: 3000 },
+    items: 5,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 4,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
 };
 
 const Wrapper = styled.section`

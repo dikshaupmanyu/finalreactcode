@@ -68,7 +68,9 @@ const SignIn = () => {
       localStorage.setItem("userDataEmail", res.result.userValid.email);
       history("/");
       setInpval({ ...inpval, email: "", password: "" });
-    }
+    }else if(res.status === 422){
+      alert("Plz. Login with Google account")
+    } 
   };
 
   //////////////////////////////  GOOGLE LOGIN //////////////////////////////////
@@ -80,7 +82,7 @@ const SignIn = () => {
     console.log("failed:", err);
   }
   const handlelogin = async (googleData) => {
-    localStorage.setItem('usersdatatoken', googleData.tokenId);
+    // localStorage.setItem('usersdatatoken', googleData.tokenId);
     // console.log("success:", googleData);
     const res = await fetch('/api/google-login', {
       method: 'POST',
@@ -97,13 +99,17 @@ const SignIn = () => {
     const data = await res.json();
     
     if(data.status === 201){
+      
       setLoginData(data);
+      localStorage.setItem('usersdatatoken', data.result.token);
       localStorage.setItem('loginData', JSON.stringify(data));
       localStorage.setItem('userDataEmail', JSON.stringify(data.result.userExist.email));
       history('/');
-      
     }else{
-      history('/signup');
+      localStorage.setItem('usersdatatoken', data.result.token);
+      localStorage.setItem('loginData', JSON.stringify(data));
+      localStorage.setItem('userDataEmail', JSON.stringify(data.result.user.email));
+      history('/');
 
     }
   };

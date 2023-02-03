@@ -31,6 +31,11 @@ export default function Orders() {
   };
 
 
+  
+  const view = (id) => {
+    history(`/orderDetail/${id}`);
+  };
+
 
   const handleDelete = async (id) => {
     // alert(id)
@@ -73,8 +78,8 @@ const history = useNavigate();
                 <th>Amount</th>
                 <th>Payment Status</th>
                 <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
+                <th>Action</th>
+                {/* <th>Address</th> */}
               </tr>
             </thead>
             {data.length > 0
@@ -86,10 +91,14 @@ const history = useNavigate();
                         <td>{el.shipping.name}</td>
                         <td>{el.customerId}</td>
                         <td>{el.subtotal}</td>
-                        <td>{el.payment_status}</td>
+                        {/* <td>{el.payment_status}</td> */}
                         <td>{el.shipping.email}</td>
                         <td>{el.shipping.phone}</td>
-                        <td>{el.shipping.address.city}</td>
+                        {/* <td>{el.shipping.address.city}</td> */}
+                        <td className="d-flex justify-content-between">
+                          <button className="btn btn-primary"  onClick={() => view(el._id)}>View</button>
+                         
+                        </td>
                       </tr>
                     </tbody>
                     </>

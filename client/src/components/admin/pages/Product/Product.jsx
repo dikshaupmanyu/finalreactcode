@@ -12,49 +12,37 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function Product() {
   const history = useNavigate();
 
-  const [product, setProduct] = useState({
-    fname: "",
-    description: "",
-    price: "",
-    subcategory: "",
-    stock: "",
-  });
-  const [data, setData] = useState([]);
-  const [Cdata, setCData] = useState();
-  const [subdatas, setsubDatas] = useState([]);
+
+  const [fname, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [stock, setStock] = useState("");
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [img, setImg] = useState("");
+  const [Cdata, setCData] = useState([]);
   const [subdata, setSubData] = useState([]);
   const [file, setFile] = useState([]);
   console.log(file);
-
-  const setdata = (e) => {
-    const { value, name } = e.target;
-    console.log(value);
-    setProduct(() => {
-      return { ...product, [name]: value };
-    });
-  };
 
   const setimgfile = (e) => {
     setFile(e.target.files[0]);
   };
 
   const params = useParams();
-
   const getProductDetails = async () => {
     // console.log(params)
     let result = await fetch(`/product/${params.id}`);
     result = await result.json();
-    setData(result);
-  };
-
-  // ////////////////////////////////////////////////////////////////////// filter
-
-  const filterItem = (categItem) => {
-    setCData(categItem);
-    const updatedItem = subdata.filter((curElem) => {
-      return curElem.category === categItem;
-    });
-    setsubDatas(updatedItem);
+    console.log(result)
+    setName(result.fname);
+    setDescription(result.description);
+    setPrice(result.price);
+    setImg(result.imgpath);
+    setStock(result.stock);
+    setCategory(result.category);
+    setSubCategory(result.subcategory
+      );
   };
 
   ////////////////////////////////////////////////////////////////////  //  get category name
@@ -69,7 +57,7 @@ export default function Product() {
     if (res.data.status === 401 || !res.data) {
       console.log("errror");
     } else {
-      setData(res.data.getCat);
+      setCData(res.data.getCat);
     }
   };
 
@@ -93,24 +81,25 @@ export default function Product() {
     getProductDetails();
     getCategoryName();
     getSubCategoryName();
+    // addUserData()
   }, []);
 
   //////////////////////////////////////////////////////////////////// adduser data
 
   const addUserData = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     var formData = new FormData();
     // _.forEach(e.target.file, file => {
-    formData.append("imgpath", file);
+    // formData.append("imgpath", file);
 
     // })
-    formData.append("fname", product.fname);
-    formData.append("description", product.description);
-    formData.append("price", product.price);
-    formData.append("category", Cdata);
-    formData.append("subcategory", product.subcategory);
-    formData.append("stock", product.stock);
+    formData.append("fname",fname);
+    formData.append("description",description);
+    formData.append("price",price);
+    formData.append("category", category);
+    formData.append("subcategory", subCategory);
+    formData.append("stock", stock);
 
     const config = {
       headers: {
@@ -118,10 +107,10 @@ export default function Product() {
       },
     };
 
-    const res = await axios.post("/product", formData, config);
+    const res = await axios.put(`/product/${params.id}`, formData, config);
     console.log(res);
 
-    if (res.data.status === 201) {
+    if (res.status === 201) {
       history("/admin");
     } else {
       console.log("errror");
@@ -143,77 +132,64 @@ export default function Product() {
               <button className="productAddButton">Create</button>
             </Link>
           </div>
-          {/* <div className="productTop">
-          <div className="productTopLeft">
-              <Chart data={productData} dataKey="Sales" title="Sales Performance"/>
-          </div>
-          <div className="productTopRight">
-              <div className="productInfoTop">
-                  <img src={`/uploads/${data.imgpath}`} alt="" className="productInfoImg" />
-                  <span className="productName">{data.fname}</span>
-              </div>
-              <div className="productInfoBottom">
-                  <div className="productInfoItem">
-                      <span className="productInfoKey">id:</span>
-                      <span className="productInfoValue">{data._id}</span>
-                  </div>
-                  <div className="productInfoItem">
-                      <span className="productInfoKey">price:</span>
-                      <span className="productInfoValue">{data.price}</span>
-                  </div>
-                  <div className="productInfoItem">
-                      <span className="productInfoKey">active:</span>
-                      <span className="productInfoValue">yes</span>
-                  </div>
-                  <div className="productInfoItem">
-                      <span className="productInfoKey">in stock:</span>
-                      <span className="productInfoValue">no</span>
-                  </div>
-              </div>
-          </div>
-      </div> */}
+
           <div className="productBottom">
             <form className="productForm">
               <div className="productFormLeft">
                 <label>Product Name</label>
                 <input
                   type="text"
-                  placeholder="Apple AirPod"
-                  value={data.fname}
+                  placeholder=""
+                  value={fname}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
                 />
                 <label>Description</label>
                 <input
                   type="text"
                   placeholder="Apple AirPod"
-                  value={data.description}
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
                 />
                 <label>Price</label>
                 <input
                   type="text"
                   placeholder="Apple AirPod"
-                  value={data.price}
+                  value={price}
+                  onChange={(e) => {
+                    setPrice(e.target.value);
+                  }}
                 />
                 <label>Category</label>
                 <select
                   name="category"
                   id="active"
-                  onChange={(e) => filterItem(e.target.value)}
+                  value={category}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                  }}
                 >
-                  {data.length > 0
-                    ? data.map((el, i) => {
-                        return (
-                          <>
-                            <option key={i}>{el.fname}</option>
-                          </>
-                        );
-                      })
-                    : " "}
+                {Cdata.length > 0
+              ? Cdata.map((el, i) => {
+                  return (
+                    <>
+                    <option key={i}>{el.fname}</option>
+                    </>
+
+                    );
+                }): " "
+                }
                 </select>
                 <label>SubCategory</label>
-                <select name="subcategory" id="active" onChange={setdata}>
-                  {subdatas.length > 0
-                    ? subdatas
-                        .filter((product) => product.category)
+                <select name="subcategory" id="active" value={subCategory}  onChange={(e) => {
+                    setSubCategory(e.target.value);
+                  }}>
+                  {subdata.length > 0
+                    ? subdata
+                        // .filter((product) => product.category)
                         .map((el, i) => {
                           return (
                             <>
@@ -227,23 +203,26 @@ export default function Product() {
                 <label>In Stock</label>
                 <input
                   type="text"
-                  placeholder="Apple AirPod"
-                  value={data.stock}
+                  placeholder="stock"
+                  value={stock}
+                  onChange={(e) => {
+                    setStock(e.target.value);
+                  }}
                 />
               </div>
               <div className="productFormRight">
                 <div className="productUpload">
                   <img
-                    src={`/uploads/${data.imgpath}`}
+                    src={`/uploads/${img}`}
                     alt=""
                     className="productUploadImg"
                   />
                   <label for="file">
                     <Publish />
                   </label>
-                  <input type="file" id="file" style={{ display: "none" }} />
+                  <input type="file" id="file" name="file" style={{ display: "none" }} onChange={setimgfile}/>
                 </div>
-                <button className="productButton">Update</button>
+                <button className="productButton" onClick={() => {addUserData()}}>Update</button>
               </div>
             </form>
           </div>

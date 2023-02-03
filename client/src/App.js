@@ -37,6 +37,7 @@ import Homes from "./components/admin/pages/Home/Home";
 import Category from "./components/admin/Category";
 import UserList from "./components/admin/pages/userList/UserList";
 import User from "./components/admin/pages/User/User";
+import OrderDetail from "./components/admin/pages/OrderDetail/OrderDetail";
 import NewUser from "./components/admin/pages/NewUser/NewUser";
 import ProductList from "./components/admin/pages/ProductList/ProductList";
 import Product from "./components/admin/pages/Product/Product";
@@ -272,6 +273,7 @@ function App() {
               {" "}
             </Route>
             <Route path="/orders" element={<Orders />} />
+            <Route path="/orderDetail/:id" element={<OrderDetail />} />
             <Route path="/myorders" element={<MyOrders cart={cart.length} bag={bag.length}/>} />
             <Route path="/admin/login" element={<Login />} />
             <Route path="/addCategory" element={<Category />} />

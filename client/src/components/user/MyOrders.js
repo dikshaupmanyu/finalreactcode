@@ -7,7 +7,7 @@ const MyOrders = ({ cart, bag }) => {
   console.log(myOrder);
 
   const [email, setEmail] = useState(localStorage.getItem("userDataEmail"));
-  console.log(email);
+  // console.log(email);
   const DashboardValid = async () => {
     // let token = localStorage.getItem("usersdatatoken");
 
@@ -21,7 +21,7 @@ const MyOrders = ({ cart, bag }) => {
 
     const data = await res.json();
 
-    if (data.status == 401 || !data) {
+    if (data.status === 401 || !data) {
       // history("*");
     } else {
       console.log("user verify");
@@ -65,7 +65,7 @@ const MyOrders = ({ cart, bag }) => {
               <div className="cart-items">
                 {myOrder.map((cartItem, i) => (
                   <div className="mb-4">
-                    {cartItem.shipping.email == email
+                    {cartItem.shipping.email === email
                       ? cartItem.products.map((curElem) => {
                           return (
                             <>

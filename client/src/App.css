@@ -50,4 +50,7 @@
 /* //////////////////// */
 
 
-
+/* 
+li.react-multi-carousel-item.react-multi-carousel-item--active{
+  width:500px !important;
+} */

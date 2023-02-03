@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     imgpath:{
         type:String,
-        required:true
+        // required:true
     },
     quantity:{
         type:Number,

@@ -2,17 +2,12 @@ import React, { useContext, useEffect, useState , } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { FiShoppingCart , FiHeart} from "react-icons/fi";
-import { CgMenu, CgClose } from "react-icons/cg";
-import { UserContext } from "../../App";
 import LoginButton from "../Auth/LoginButton";
-import { useDispatch } from "react-redux";
 import LogoutButton from "../Auth/Logout-button";
-import { useAuth0 } from "@auth0/auth0-react";
 import { LoginContext } from "../../context/Context";
 
 
 const Nav = ({size, bag}) => {
-  const dispatch = useDispatch();
 
   const { logindata, setLoginData } = useContext(LoginContext);
   console.log(logindata)

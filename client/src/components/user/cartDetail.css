@@ -116,6 +116,45 @@
     margin-top: 3px;
 }
 
+
+.carousels {
+    /* display: flex;
+    align-items: center;
+    justify-content: space-between; */
+    padding: 50px;
+    /* background-color: whitesmoke;
+    height: 40vh;
+    margin-top: 50px; */
+    border-radius: 50px;
+  }
+
+  
+.carousel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* border:2px solid black; */
+    border-radius: 20px;
+    padding-top: 60px;
+    /* width: 30%; */
+    margin-right: 10px;
+    cursor: pointer;
+    box-shadow: -5px 10px rgb(255 255 255 / 0%), 2px 2px 5px teal
+  }
+
+  .carouselIcon {
+    width: 23%;
+    height: 100px;
+  }
+  
+  .carouselTitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 20px;
+  }
+
+
 /* media query */
 
 @media (max-width:778px){

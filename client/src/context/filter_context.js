@@ -1,7 +1,6 @@
-import React, { useState,createContext, useContext, useReducer, useEffect } from "react";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { useProductContext } from "./productContext";  
 import reducer from "../reducer/filterReducer";
-import axios from "axios";
 // import { get } from "immer/dist/internal";
 
 const FilterContext = createContext();
@@ -26,27 +25,7 @@ const initialState = {
 
 export const FilterContextProvider = ({ children }) => {
   const { products } = useProductContext();
-  // const [products , setProducts] = useState([])
-  // console.log(products)
   const [state, dispatch] = useReducer(reducer, initialState);
-  // console.log(state)
-
-
-  // to set the grid view
-  // const setGridView = () => {
-  //   return dispatch({ type: "SET_GRID_VIEW" });
-  // };
-
-  // to set the list view
-  // const setListView = () => {
-  //   return dispatch({ type: "SET_LIST_VIEW" });
-  // };
-
-  // sorting function
-  // const sorting = (event) => {
-  //   let userValue = event.target.value;
-  //   dispatch({ type: "GET_SORT_VALUE", payload: userValue });
-  // };
 
   // update the filter values
   const updateFilterValue = (event) => {
@@ -79,9 +58,6 @@ export const FilterContextProvider = ({ children }) => {
     <FilterContext.Provider
       value={{
         ...state,
-        // setGridView,
-        // setListView,
-        // sorting,
         updateFilterValue,
         clearFilters
       }}>

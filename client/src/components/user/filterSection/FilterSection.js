@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Filter from "./Filter/Filter";
-import List from "./List/List";
 import SearchBar from "./SearchBar/SearchBar";
 import axios from "axios";
 import "./filterSection.css";
@@ -44,9 +43,6 @@ const FilterSection = (products) => {
           <div className="home_panel-wrap">
             <Filter />
           </div>
-          <div className='home_list-wrap'>
-            <List />
-        </div>
         </div>
       </div>
     </>

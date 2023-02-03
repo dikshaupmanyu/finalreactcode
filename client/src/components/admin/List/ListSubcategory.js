@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {  useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import axios from "axios";
 import moment from "moment";
@@ -9,8 +9,6 @@ import Topbar from "../topbar/Topbar";
 const ListSubcategory = () => {
   const [subdata, setSubData] = useState([]);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const [show, setShow] = useState(false);
 
   const history = useNavigate();

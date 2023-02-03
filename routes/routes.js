@@ -69,7 +69,7 @@ router.post("/api/google-login", async (req, res) => {
   });
   console.log(ticket);
 
-  const { name, email, picture } = ticket.getPayload();
+  const { name, email, picture,given_name } = ticket.getPayload();
 
   const userExist = await registerS.findOne({ email: email });
   console.log("userExist", userExist);
@@ -77,7 +77,23 @@ router.post("/api/google-login", async (req, res) => {
   if (!userExist) {
     // token generate
     // return res.redirect("/signup");
-    res.status(200).json({message: "User not exist"});
+      const user = new registerS({
+        username:given_name,
+        fullname:name,
+        email:email,
+
+      });
+
+      await user.save();
+
+      const token = generateAuthToken(user);
+      // res.send(token);
+
+      const result = {
+        user,
+        token,
+      };
+    res.status(200).json({result});
 
   } else {
     const token = req.body.token;
@@ -87,16 +103,6 @@ router.post("/api/google-login", async (req, res) => {
       token,
     };
     res.status(201).json({ status: 201, result });
-    //   const user = new registerS({
-    //     username:name,
-    //     fullname:name,
-    //     email:email,
-    //   });
-
-    //   await user.save();
-
-    //   const token = generateAuthToken(user);
-    //   res.send(token);
   }
 });
 
@@ -112,6 +118,7 @@ router.post("/register", async (req, res) => {
   try {
     // console.log("inside")
     const userExist = await registerS.findOne({ email: email });
+    // const userExist = await registerS.findOne({ email: email });
 
     if (userExist) {
       return res.status(422).json({ error: "Email alread exist" });
@@ -246,6 +253,30 @@ router.get("/myOrder", async (req, res) => {
     res.status(401).json({ status: 401, error });
   }
 });
+router.get("/orderDetail/:id", async (req, res) => {
+  // console.log(req.email)
+  const { id } = req.params;
+  try {
+    // const getCat = await Order.findOne({ email: req.email });
+    const getCat = await Order.findById({ _id: id });
+
+    res.status(201).json({ status: 201, getCat });
+  } catch (error) {
+    res.status(401).json({ status: 401, error });
+  }
+});
+
+// router.get("/orderDetail/:id", async (req, res) => {
+//   const { id } = req.params;
+
+//   let result = await Order.findById({ _id: id });
+//   console.log(result);
+//   if (result) {
+//     res.send(result);
+//   } else {
+//     res.send({ message: "No Record Found" });
+//   }
+// });
 
 router.get("/userList", async (req, res) => {
   try {
@@ -410,14 +441,15 @@ router.get("/product/:id", upload.single("photo"), async (req, res) => {
   }
 });
 
-router.put("/product/:id", upload.single("imgpath"), (req, res) => {
+router.put("/product/:id", upload.single("file"),  (req, res) => {
   console.log(req.file + "yes");
   // console.log("yes")
   // return false;
   // try{
-  const { id } = req.params;
+  const  id = req.params;
+  // const { filename } = req.file;
   const date = moment(new Date()).format("YYYY-MM-DD");
-  const { _id, fname, description } = req.body;
+  const { _id, fname, description, price, category, subcategory, stock } = req.body;
 
   // const {imgpath} = req.file;
 
@@ -427,7 +459,11 @@ router.put("/product/:id", upload.single("imgpath"), (req, res) => {
       $set: {
         fname: fname,
         description: description,
-        imgpath: req.file.filename,
+        price:price,
+        category: category,
+        subcategory: subcategory,
+        stock: stock,
+        // imgpath: filename, 
       },
     }
   )
@@ -444,6 +480,23 @@ router.put("/product/:id", upload.single("imgpath"), (req, res) => {
   //     res.status(422).json(error);
   // }
 });
+
+// router.patch("/product/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const date = moment(new Date()).format("YYYY-MM-DD");
+//     const { fname, description, price, category, subcategory, stock } = req.body;
+
+//     const updateuser = await Product.findByIdAndUpdate(id, fname, description, price, category, subcategory, stock, {
+//       new: true,
+//     });
+
+//     console.log(updateuser); 
+//     res.status(201).json(updateuser);
+//   } catch (error) {
+//     res.status(422).json(error);
+//   }
+// });
 
 // delete product data
 router.delete("/product/:id", async (req, res) => {
